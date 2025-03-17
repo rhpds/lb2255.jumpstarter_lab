@@ -1,9 +1,0 @@
----
-# Name of the model to be served
-ocp_user_provision_num_users: "{{ num_users | default(1) }}"
-ocp_user_provision_username_base: "user"
-
-
-# Privilege escalation settings (included in defaults)
-ocp_user_provision_become: true
-ocp_user_provision_become_user: root

@@ -1,0 +1,3 @@
+---
+jumpstarter_lab_guid: "{{ guid | default('testguid') }}"
+
