@@ -2,25 +2,14 @@
 # Implement pre-/post-install, install/uninstall tasks in their own files.
 
 - name: running initial tasks
-  include_tasks:
-    file: ./initial.yml
-    apply:
-      become: "{{ become_override | bool }}"
-
+  ansible.builtin.import_tasks: initial.yml
+    
 - name: running pre-install tasks
-  include_tasks:
-    file: ./pre_install.yml
-    apply:
-      become: "{{ become_override | bool }}"
-
+  ansible.builtin.import_tasks: pre_install.yml
+    
 - name: running install tasks
-  include_tasks:
-    file: ./install.yml
-    apply:
-      become: "{{ become_override | bool }}"
-
+  ansible.builtin.import_tasks: install.yml
+    
 - name: running post install tasks
-  include_tasks:
-    file: ./post_install.yml
-    apply:
-      become: "{{ become_override | bool }}"
+  ansible.builtin.import_tasks: post_install.yml
+    
