@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jumpstarter
+  namespace: openshift-gitops
+spec:
+  destination:
+    name: in-cluster
+    namespace: "{{ jumpstarter_namespace }}"
+  project: default
+  source:
+    chart: jumpstarter
+    helm:
+      valuesObject:
+        global:
+          baseDomain: "{{ cluster_apps_domain }}"
+          metrics:
+            enabled: true
+        jumpstarter-controller:
+          grpc:
+            mode: "route"
+          config:
+            authentication:
+              jwt:
+                - issuer:
+                    url: https://kubernetes.default.svc
+                    audiences:
+                      - https://kubernetes.default.svc
+                    audienceMatchPolicy: MatchAny
+                    certificateAuthority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                  claimMappings:
+                    username:
+                      expression: '"kubernetes:" + claims["kubernetes.io"]["namespace"]'
+    repoURL: "{{ jumpstarter_helm_repo }}"
+    targetRevision: "{{ jumpstarter_helm_repo_version }}"
+  syncPolicy:
+    automated: {}
+    retry:
+      backoff:
+        duration: 10s5s
+        factor: 2
+        maxDuration: 10m0s
+      limit: 2
+    syncOptions:
+      - RespectIgnoreDifferences=true

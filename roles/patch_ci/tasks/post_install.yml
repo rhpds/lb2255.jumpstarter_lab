@@ -1,0 +1,13 @@
+# Implement your post-install deployment tasks here
+# -------------------------------------------------
+
+- name: patch ingress controller
+  shell: |
+    oc -n openshift-ingress-operator patch ingresscontroller/default --type=merge \
+      --patch='{"spec":{"endpointPublishingStrategy": {"type":"LoadBalancerService", "loadBalancer": {"scope":"External", "providerParameters":{"type":"AWS", "aws": {"type":"Classic", "classicLoadBalancer": {"connectionIdleTimeout":"400s"}}}}}}}'
+
+
+- name: remove local backstage config file
+  file:
+    path: "roles/patch_developer_hub/templates/app-config.yaml"
+    state: absent
