@@ -1,5 +1,12 @@
-# Ansible Collection - lb2255.could_you_be_a_hacker
+# Ansible Collection - lb2255.jumpstarter
 
-Documentation for the collection.
+Jumpstarter Lab setup (RH Summit 2025)
 
-Moving stuff around.
+```yaml
+all:
+  vars:
+    # set the following RHDP instance specific variables
+    cluster_generic_password: "xyz123" 
+    cluster_guid: "xyz123"   
+    region: "us-east-2" 
+```
