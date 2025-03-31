@@ -176,6 +176,6 @@ techdocs:
         accessKeyId: minio
         secretAccessKey: {{ cluster_generic_password }}
       endpoint: https://minio-ic-shared-minio.{{ cluster_apps_domain }}
-      region: {{ region }}
+      cluster_region: {{ cluster_region }}
       s3ForcePathStyle: true
     type: awsS3
