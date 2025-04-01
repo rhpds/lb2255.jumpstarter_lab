@@ -33,6 +33,20 @@ subjects:
     name: qemu-exporter
     namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
+  name: system:openshift:scc:privileged
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+- kind: ServiceAccount
+  name: qemu-exporter
+  namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -53,6 +67,8 @@ spec:
     metadata:
       labels:
         exporter-mock: qemu
+      annotations:
+        openshift.io/required-scc: privileged
     spec:
       resources:
         limits:
