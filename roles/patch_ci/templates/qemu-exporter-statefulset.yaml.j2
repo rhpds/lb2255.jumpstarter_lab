@@ -54,6 +54,13 @@ spec:
       labels:
         exporter-mock: qemu
     spec:
+      resources:
+        limits:
+          cpu: 2.0
+          memory: "2G"
+        requests:
+          cpu: 1.0
+          memory: "1G"
       tolerations:
       - key: "metal"
         operator: "Equal"
