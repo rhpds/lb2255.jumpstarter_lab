@@ -50,9 +50,9 @@ spec:
         exporter-mock: qemu
     spec:
       tolerations:
-      - key: "kubernetes.io/arch"
+      - key: "metal"
         operator: "Equal"
-        value: "arm64"
+        value: "true"
         effect: "NoSchedule"
       affinity:
         nodeAffinity:
