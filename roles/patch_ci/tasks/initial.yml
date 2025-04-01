@@ -2,7 +2,7 @@
 # -------------------------------------------------
 
 - name: gather facts
-  delegate_to: localhost
+  # delegate_to: localhost
   block:
     - name: determine cluster base domain
       k8s_info:
