@@ -138,7 +138,7 @@ spec:
       containers:
         - name: jumpstarter-exporter
           image: quay.io/ncao/jumpstarter:summit-aarch64 # TODO: use an arm based image
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           securityContext:
             privileged: true
           volumeMounts:
