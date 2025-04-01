@@ -40,7 +40,12 @@ metadata:
   name: qemu-exporter
 spec:
   serviceName: qemu-exporter
-  replicas: 3
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "100%"
+  replicas: 40
   selector:
     matchLabels:
       exporter-mock: qemu
