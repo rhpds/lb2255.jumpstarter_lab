@@ -28,6 +28,26 @@
   loop:
     - clusterrolebinding-oidc-reviewer.yml
     - jumpstarter-application.yml.j2
+
+- name: Wait for Jumpstarter application to sync
+  k8s_info:
+    api_version: argoproj.io/v1alpha1
+    kind: Application
+    name: jumpstarter
+    namespace: openshift-gitops
+  register: r_application
+  retries: 180
+  delay: 10
+  until:
+  - r_application.resources | length > 0
+  - r_application.resources[0].status.sync.status == 'Synced'
+
+- name: create qemu exporter assets
+  k8s:
+    state: present
+    apply: yes
+    definition: "{{ lookup('template', item ) | from_yaml_all }}"
+  loop:
     - qemu-exporter-statefulset.yaml.j2
     - qemu-exporter-client.yaml.j2
 
