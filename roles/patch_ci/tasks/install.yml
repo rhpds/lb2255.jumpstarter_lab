@@ -2,7 +2,7 @@
 # -------------------------------------------------
 
 # extra assets for the developer hub / pipelines
-  
+
 - name: create the rhadp application
   k8s:
     state: present
@@ -61,7 +61,7 @@
       register: r_project_delete
       when: project_id is defined
 
-- name: import repos 
+- name: import repos
   ansible.builtin.import_tasks: import_repos.yml
 
 # backstage config
@@ -71,16 +71,16 @@
     oc patch apps backstage-gitops -n openshift-gitops --type=json -p '[{"op": "remove", "path": "/spec/syncPolicy/automated"}]'
     oc patch apps backstage -n openshift-gitops --type=json -p '[{"op": "remove", "path": "/spec/syncPolicy/automated"}]'
   ignore_errors: true
-  
+
 - name: create backstage config file
   template:
-    src: "roles/patch_ci/templates/app-config.yaml.j2"
-    dest: "roles/patch_ci/templates/app-config.yaml"
+    src: "templates/app-config.yaml.j2"
+    dest: "/tmp/templates/app-config.yaml"
 
 - name: replace backstage configmap
   shell: |
     oc delete configmap backstage-developer-hub-app-config -n backstage
-    oc create configmap backstage-developer-hub-app-config --from-file=roles/patch_ci/templates/app-config.yaml -n backstage
+    oc create configmap backstage-developer-hub-app-config --from-file=/tmp/templates/app-config.yaml -n backstage
     oc label --overwrite configmap backstage-developer-hub-app-config rht-gitops.com/openshift-gitops=backstage -n backstage
 
 - name: start backstage re-deployment
