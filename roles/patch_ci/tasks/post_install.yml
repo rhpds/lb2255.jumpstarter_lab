@@ -8,5 +8,5 @@
 
 - name: remove local backstage config file
   file:
-    path: "/tmp/templates/app-config.yaml"
+    path: "/tmp/app-config.yaml"
     state: absent
