@@ -168,6 +168,8 @@ spec:
               export:
                 qemu:
                   type: jumpstarter_driver_qemu.driver.Qemu
+                  config:
+                    mem: "1G"
               EOF
 
               jmp run --exporter-config qemu.yaml
