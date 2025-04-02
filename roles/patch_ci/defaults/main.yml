@@ -1,12 +1,12 @@
 ---
 # set the following RHDP instance specific variables
-cluster_generic_password: "xyz123" 
-cluster_guid: "xyz123"   
+cluster_generic_password: "xyz123"
+cluster_guid: "xyz123"
 cluster_region: "us-east-2"
 
 # aws credentials
-aws_access_key_id: "xyz123"
-aws_secret_access_key: "xyz123"
+jumpstarter_aws_access_key_id: "xyz123"
+jumpstarter_aws_secret_access_key: "xyz123"
 
 # default namespaces
 gitlab_namespace: "gitlab"
