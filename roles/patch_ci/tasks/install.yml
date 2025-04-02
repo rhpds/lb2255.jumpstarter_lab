@@ -52,57 +52,13 @@
     - qemu-exporter-client.yaml.j2
 
 # import the repos
-- name: delete repos
-  ignore_errors: true
-  block:
-    - name: lookup project
-      uri:
-        url: https://{{ gitlab_host }}/api/v4/projects?search={{ templates_repo_name }}
-        method: GET
-        validate_certs: false
-      register: r_project
-      until: r_project.status == 200 or r_project.status == 403
-      retries: 5
-      delay: 10
-
-    - name: register project id
-      set_fact:
-        project_id: "{{ r_project.json[0].id }}"
-      when: r_project.status == 200 and r_project.json[0].id is defined
-
-    - name: delete project
-      uri:
-        url: https://{{ gitlab_host }}/api/v4/projects/{{ project_id }}
-        method: DELETE
-        headers:
-          PRIVATE-TOKEN: "{{ gitlab_token }}"
-        validate_certs: false
-        status_code: 202
-      register: r_project_delete
-      when: project_id is defined
 
 - name: import repos
   ansible.builtin.import_tasks: import_repos.yml
 
 # backstage config
 
-- name: disable gitops sync
-  shell: |
-    oc patch apps backstage-gitops -n openshift-gitops --type=json -p '[{"op": "remove", "path": "/spec/syncPolicy/automated"}]'
-    oc patch apps backstage -n openshift-gitops --type=json -p '[{"op": "remove", "path": "/spec/syncPolicy/automated"}]'
-  ignore_errors: true
+# disabled for now ...
+#- name: patch backstage config
+#  ansible.builtin.import_tasks: patch_backstage.yml
 
-- name: create backstage config file
-  template:
-    src: "templates/app-config.yaml.j2"
-    dest: "/tmp/app-config.yaml"
-
-- name: replace backstage configmap
-  shell: |
-    oc delete configmap backstage-developer-hub-app-config -n backstage
-    oc create configmap backstage-developer-hub-app-config --from-file=/tmp/app-config.yaml -n backstage
-    oc label --overwrite configmap backstage-developer-hub-app-config rht-gitops.com/openshift-gitops=backstage -n backstage
-
-- name: start backstage re-deployment
-  shell: |
-    oc delete pods --selector=app.kubernetes.io/name=developer-hub -n backstage

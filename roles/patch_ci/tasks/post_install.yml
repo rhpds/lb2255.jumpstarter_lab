@@ -1,12 +1,18 @@
 # Implement your post-install deployment tasks here
 # -------------------------------------------------
 
+- name: remove local backstage config file
+  file:
+    path: "/tmp/app-config.yaml"
+    state: absent
+
 - name: patch ingress controller
   shell: |
     oc -n openshift-ingress-operator patch ingresscontroller/default --type=merge \
       --patch='{"spec":{"endpointPublishingStrategy": {"type":"LoadBalancerService", "loadBalancer": {"scope":"External", "providerParameters":{"type":"AWS", "aws": {"type":"Classic", "classicLoadBalancer": {"connectionIdleTimeout":"400s"}}}}}}}'
 
-- name: remove local backstage config file
-  file:
-    path: "/tmp/app-config.yaml"
-    state: absent
+# https://access.redhat.com/solutions/7082151
+- name: patch kubevirt config
+  shell: |
+    oc annotate --overwrite -n openshift-cnv hyperconverged kubevirt-hyperconverged \
+      kubevirt.kubevirt.io/jsonpatch='[{"op": "add", "path": "/spec/configuration/developerConfiguration/featureGates/-", "value": "MultiArchitecture"}]'
