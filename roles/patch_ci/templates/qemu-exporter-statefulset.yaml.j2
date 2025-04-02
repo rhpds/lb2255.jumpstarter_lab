@@ -33,6 +33,20 @@ subjects:
     name: qemu-exporter
     namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
+  name: system:openshift:scc:privileged
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+- kind: ServiceAccount
+  name: qemu-exporter
+  namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -40,7 +54,12 @@ metadata:
   name: qemu-exporter
 spec:
   serviceName: qemu-exporter
-  replicas: 3
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: "100%"
+  replicas: 40
   selector:
     matchLabels:
       exporter-mock: qemu
@@ -48,7 +67,16 @@ spec:
     metadata:
       labels:
         exporter-mock: qemu
+      annotations:
+        openshift.io/required-scc: privileged
     spec:
+      resources:
+        limits:
+          cpu: 2.0
+          memory: "2G"
+        requests:
+          cpu: 1.0
+          memory: "1G"
       tolerations:
       - key: "metal"
         operator: "Equal"
@@ -110,7 +138,7 @@ spec:
       containers:
         - name: jumpstarter-exporter
           image: quay.io/ncao/jumpstarter:summit-aarch64 # TODO: use an arm based image
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           securityContext:
             privileged: true
           volumeMounts:
@@ -140,6 +168,9 @@ spec:
               export:
                 qemu:
                   type: jumpstarter_driver_qemu.driver.Qemu
+                  config:
+                    smp: 1
+                    mem: "1G"
               EOF
 
               jmp run --exporter-config qemu.yaml
