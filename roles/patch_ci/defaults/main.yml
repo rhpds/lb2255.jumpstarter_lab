@@ -32,3 +32,8 @@ templates_repo_group: "rhdh"
 templates_repo_name: "lab2255-templates"
 templates_repo_url: "https://github.com/rhadp-example-repos/lab2255-templates"
 templates_repo_branch: "main"
+
+# this might be obsolete ...
+aib_builder_user: "bob-builder"
+aib_builder_password: "xyz123"
+aib_builder_host: "aib-builder.example.com"
