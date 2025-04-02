@@ -1,0 +1,20 @@
+# Implement your install deployment tasks here
+# -------------------------------------------------
+
+- name: create vault secrets for AWS/S3
+  ignore_errors: true
+  kubernetes.core.k8s_exec:
+    namespace: "{{ vault_namespace }}"
+    pod: vault-0
+    command: "{{ item }}"
+  loop:
+    - "vault kv put kv/secrets/janusidp/aws/access_key_id value={{ jumpstarter_aws_access_key_id }}"
+    - "vault kv put kv/secrets/janusidp/aws/secret_access_key value={{ jumpstarter_aws_secret_access_key }}"
+    - "vault kv put kv/secrets/janusidp/aws/default_region value={{ cluster_region }}"
+
+- name: create the rhadp application
+  k8s:
+    state: present
+    definition: "{{ lookup('template', item ) | from_yaml }}"
+  loop:
+    - rhadp-bootstrap.yml.j2

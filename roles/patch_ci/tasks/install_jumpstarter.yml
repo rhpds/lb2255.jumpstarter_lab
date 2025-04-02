@@ -1,0 +1,54 @@
+# Implement your install deployment tasks here
+# -------------------------------------------------
+
+- name: create namespaces
+  kubernetes.core.k8s:
+    state: present
+    kind: Namespace
+    name: "{{ item }}"
+    definition:
+      metadata:
+        labels:
+          argocd.argoproj.io/managed-by: openshift-gitops
+  with_items:
+    - "{{ jumpstarter_namespace }}"
+
+- name: create cluster role and binding
+  k8s:
+    state: present
+    definition: "{{ lookup('template', item ) | from_yaml }}"
+  loop:
+    - jumpstarter-clusterrole.yml
+    - jumpstarter-rolebinding.yml
+
+- name: create the application
+  k8s:
+    state: present
+    apply: yes
+    definition: "{{ lookup('template', item ) | from_yaml_all }}"
+  loop:
+    - clusterrolebinding-oidc-reviewer.yml
+    - jumpstarter-application.yml.j2
+
+- name: Wait for Jumpstarter application to sync
+  k8s_info:
+    api_version: argoproj.io/v1alpha1
+    kind: Application
+    name: jumpstarter
+    namespace: openshift-gitops
+  register: r_application
+  retries: 180
+  delay: 10
+  until:
+  - r_application.resources | length > 0
+  - r_application.resources[0].status.sync.status == 'Synced'
+
+- name: create qemu exporter assets
+  k8s:
+    state: present
+    apply: yes
+    definition: "{{ lookup('template', item ) | from_yaml_all }}"
+  loop:
+    - qemu-exporter-statefulset.yaml.j2
+    - qemu-exporter-client.yaml.j2
+

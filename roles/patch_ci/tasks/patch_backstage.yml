@@ -1,6 +1,33 @@
 # Implement your install deployment tasks here
 # -------------------------------------------------
 
+- name: Wait for Backstage application to sync
+  k8s_info:
+    api_version: argoproj.io/v1alpha1
+    kind: Application
+    name: backstage
+    namespace: openshift-gitops
+  register: r_application
+  retries: 180
+  delay: 10
+  until:
+  - r_application.resources | length > 0
+  - r_application.resources[0].status.sync.status == 'Synced'
+
+- name: Wait for Backstage pod to be ready
+  k8s_info:
+    #api_version: argoproj.io/v1alpha1
+    kind: Deployment
+    name: backstage-developer-hub
+    namespace: backstage
+  register: r_deployment
+  retries: 180
+  delay: 10
+  until:
+  - r_deployment.resources | length > 0
+  - r_deployment.resources[0].status.readyReplicas is defined
+  - r_deployment.resources[0].status.readyReplicas > 0
+  
 - name: disable gitops sync
   shell: |
     oc patch apps backstage-gitops -n openshift-gitops --type=json -p '[{"op": "remove", "path": "/spec/syncPolicy/automated"}]'

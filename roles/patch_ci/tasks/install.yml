@@ -1,64 +1,14 @@
 # Implement your install deployment tasks here
 # -------------------------------------------------
 
-# extra assets for the developer hub / pipelines
-
-- name: create the rhadp application
-  k8s:
-    state: present
-    definition: "{{ lookup('template', item ) | from_yaml }}"
-  loop:
-    - rhadp-bootstrap.yml.j2
-
-# jumpstarter operator
-
-- name: create cluster role and binding
-  k8s:
-    state: present
-    definition: "{{ lookup('template', item ) | from_yaml }}"
-  loop:
-    - jumpstarter-clusterrole.yml
-    - jumpstarter-rolebinding.yml
-
-- name: create the application
-  k8s:
-    state: present
-    apply: yes
-    definition: "{{ lookup('template', item ) | from_yaml_all }}"
-  loop:
-    - clusterrolebinding-oidc-reviewer.yml
-    - jumpstarter-application.yml.j2
-
-- name: Wait for Jumpstarter application to sync
-  k8s_info:
-    api_version: argoproj.io/v1alpha1
-    kind: Application
-    name: jumpstarter
-    namespace: openshift-gitops
-  register: r_application
-  retries: 180
-  delay: 10
-  until:
-  - r_application.resources | length > 0
-  - r_application.resources[0].status.sync.status == 'Synced'
-
-- name: create qemu exporter assets
-  k8s:
-    state: present
-    apply: yes
-    definition: "{{ lookup('template', item ) | from_yaml_all }}"
-  loop:
-    - qemu-exporter-statefulset.yaml.j2
-    - qemu-exporter-client.yaml.j2
-
-# import the repos
+- name: install the RHADP parts
+  ansible.builtin.import_tasks: install_rhadp.yml
 
 - name: import repos
   ansible.builtin.import_tasks: import_repos.yml
 
-# backstage config
+- name: jumpstarter operator
+  ansible.builtin.import_tasks: install_jumpstarter.yml
 
-# disabled for now ...
-#- name: patch backstage config
-#  ansible.builtin.import_tasks: patch_backstage.yml
-
+- name: patch backstage config
+  ansible.builtin.import_tasks: patch_backstage.yml

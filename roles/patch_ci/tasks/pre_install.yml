@@ -11,7 +11,6 @@
         labels:
           argocd.argoproj.io/managed-by: openshift-gitops
   with_items:
-    - "{{ jumpstarter_namespace }}"
     - "{{ outpost_namespace }}"
     - "{{ rhadp_namespace }}"
 
