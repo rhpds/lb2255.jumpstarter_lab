@@ -137,7 +137,7 @@ spec:
               echo "$ENDPOINT" > /shared/endpoint
       containers:
         - name: jumpstarter-exporter
-          image: quay.io/ncao/jumpstarter:summit-aarch64 # TODO: use an arm based image
+          image: quay.io/ncao/jumpstarter:summit-aarch64 # TODO: use a ci built image
           imagePullPolicy: Always
           securityContext:
             privileged: true
@@ -166,11 +166,20 @@ spec:
               endpoint: $(cat /shared/endpoint)
               token: $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
               export:
+                console:
+                  ref: qemu.console
+                flasher:
+                  ref: qemu.flasher
+                power:
+                  ref: qemu.power
                 qemu:
                   type: jumpstarter_driver_qemu.driver.Qemu
                   config:
                     smp: 1
                     mem: "1G"
+                    default_partitions:
+                      OVMF_CODE.fd: /usr/share/AAVMF/AAVMF_CODE.fd
+                      OVMF_VARS.fd: /usr/share/AAVMF/AAVMF_VARS.fd
               EOF
 
               jmp run --exporter-config qemu.yaml
