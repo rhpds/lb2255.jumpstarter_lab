@@ -87,10 +87,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: kubernetes.io/arch
+              - key: node-role.kubernetes.io/metal-arm
                 operator: In
                 values:
-                - arm64
+                - ""
       serviceAccountName: qemu-exporter
       restartPolicy: Always
       volumes:
