@@ -7,4 +7,12 @@ metadata:
   name: "user{{ i }}"
 spec:
   username: "kubernetes:user{{ i }}-devspaces"
+---
+apiVersion: jumpstarter.dev/v1alpha1
+kind: Client
+metadata:
+  namespace: "{{ jumpstarter_qemu_exporter_namespace }}"
+  name: "autosd-u{{ i }}-1-build"
+spec:
+  username: "kubernetes:autosd-u{{ i }}-1-build"
 {% endfor %}
