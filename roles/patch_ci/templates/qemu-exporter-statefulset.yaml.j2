@@ -137,7 +137,7 @@ spec:
               echo "$ENDPOINT" > /shared/endpoint
       containers:
         - name: jumpstarter-exporter
-          image: quay.io/ncao/jumpstarter:summit-aarch64 # TODO: use a ci built image
+          image: quay.io/jumpstarter-dev/summit-exporter:main # TODO: pin image version
           imagePullPolicy: Always
           securityContext:
             privileged: true
@@ -180,6 +180,10 @@ spec:
                     default_partitions:
                       OVMF_CODE.fd: /usr/share/AAVMF/AAVMF_CODE.fd
                       OVMF_VARS.fd: /usr/share/AAVMF/AAVMF_VARS.fd
+                    hostfwd:
+                      ssh:
+                        hostport: 9022
+                        guestport: 22
               EOF
 
               jmp run --exporter-config qemu.yaml
