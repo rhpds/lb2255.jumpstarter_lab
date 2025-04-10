@@ -13,7 +13,7 @@ We observerd some issues with the developer hub, on first boot where the databas
 psql
 
 # select the database
-\c postgresbackstage_plugin_catalog
+\c backstage_plugin_catalog
 
 # delete the offending record
 DELETE FROM knex_migrations_lock WHERE is_locked <> 0;

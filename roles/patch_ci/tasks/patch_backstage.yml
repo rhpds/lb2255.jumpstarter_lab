@@ -1,7 +1,7 @@
 # Implement your install deployment tasks here
 # -------------------------------------------------
 
-- name: Wait for Backstage application to sync
+- name: wait for backstage application to sync
   k8s_info:
     api_version: argoproj.io/v1alpha1
     kind: Application
@@ -17,7 +17,7 @@
   - r_application.resources[0].status.sync.status is defined
   - r_application.resources[0].status.sync.status == 'Synced'
 
-- name: Wait for Backstage pod to be ready
+- name: wait for backstage pod to be ready
   k8s_info:
     #api_version: argoproj.io/v1alpha1
     kind: Deployment
@@ -31,7 +31,10 @@
   - r_deployment.resources[0].status is defined
   - r_deployment.resources[0].status.readyReplicas is defined
   - r_deployment.resources[0].status.readyReplicas > 0
-  
+
+- name: scale backstage application to zero
+  shell: oc scale deployment/backstage-developer-hub --replicas=0 -n backstage
+
 - name: disable gitops sync
   shell: |
     oc patch apps backstage-gitops -n openshift-gitops --type=json -p '[{"op": "remove", "path": "/spec/syncPolicy/automated"}]'
@@ -49,6 +52,9 @@
     oc create configmap backstage-developer-hub-app-config --from-file=/tmp/app-config.yaml -n backstage
     oc label --overwrite configmap backstage-developer-hub-app-config rht-gitops.com/openshift-gitops=backstage -n backstage
 
-- name: start backstage re-deployment
-  shell: |
-    oc delete pods --selector=app.kubernetes.io/name=developer-hub -n backstage
+#- name: start backstage re-deployment
+#  shell: |
+#    oc delete pods --selector=app.kubernetes.io/name=developer-hub -n backstage
+
+- name: re-start backstage application
+  shell: oc scale deployment/backstage-developer-hub --replicas=1 -n backstage
