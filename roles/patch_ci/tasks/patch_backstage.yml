@@ -32,6 +32,10 @@
   - r_deployment.resources[0].status.readyReplicas is defined
   - r_deployment.resources[0].status.readyReplicas > 0
 
+- name: wait a bit
+  pause:
+    seconds: 120
+
 - name: scale backstage application to zero
   shell: oc scale deployment/backstage-developer-hub --replicas=0 -n backstage
 
