@@ -16,3 +16,8 @@
   shell: |
     oc annotate --overwrite -n openshift-cnv hyperconverged kubevirt-hyperconverged \
       kubevirt.kubevirt.io/jsonpatch='[{"op": "add", "path": "/spec/configuration/developerConfiguration/featureGates/-", "value": "MultiArchitecture"}]'
+
+- name: patch tekton config
+  shell: |
+    oc patch tektonconfigs.operator.tekton.dev/config --type=merge \
+      --patch='{"spec":{"pipeline":{"disable-affinity-assistant": false}}}'
