@@ -22,6 +22,6 @@
     oc patch tektonconfigs.operator.tekton.dev/config --type=merge \
       --patch='{"spec":{"pipeline":{"disable-affinity-assistant": false}}}'
 
-- name: scale quay
+- name: change quay replica count
   shell: |
-    oc scale deploy/quay-quay-app --replicas=10 -n quay-enterprise
+    oc apply -f files/quay.yaml -n quay-enterprise
