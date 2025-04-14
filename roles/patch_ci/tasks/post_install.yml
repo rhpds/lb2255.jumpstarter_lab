@@ -22,6 +22,11 @@
     oc patch tektonconfigs.operator.tekton.dev/config --type=merge \
       --patch='{"spec":{"pipeline":{"disable-affinity-assistant": false}}}'
 
+- name: copy quay config to a know location
+  copy:
+    src:  quay.yaml
+    dest: /tmp/quay.yaml
+
 - name: change quay replica count
   shell: |
-    oc apply -f files/quay.yaml -n quay-enterprise
+    oc apply -f /tmp/quay.yaml -n quay-enterprise
