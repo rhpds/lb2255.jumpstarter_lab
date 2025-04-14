@@ -123,7 +123,9 @@ spec:
                 namespace: $(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
                 name: $(cat /etc/hostname)
                 labels:
-                  example.com/board: qemu
+                  platform: qemu-arm
+                  ram: 1024
+                  type: virtual
               spec:
                 username: kubernetes:$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
               EOF
