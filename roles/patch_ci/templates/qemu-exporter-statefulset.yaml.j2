@@ -124,7 +124,7 @@ spec:
                 name: $(cat /etc/hostname)
                 labels:
                   platform: qemu-arm
-                  ram: 1024
+                  ram: "1024"
                   type: virtual
               spec:
                 username: kubernetes:$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
