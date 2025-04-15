@@ -1,0 +1,92 @@
+﻿includes:
+- dynamic-plugins.default.yaml
+plugins:
+- disabled: false
+  package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-security-insights
+- disabled: false
+  package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-topology
+- disabled: false
+  package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
+- disabled: true
+  package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
+  pluginConfig:
+    dynamicPlugins:
+      frontend:
+        backstage-community.plugin-tekton:
+          mountPoints:
+          - config:
+              if:
+                allOf:
+                - isTektonCIAvailable
+              layout:
+                gridColumn: 1 / -1
+                gridRowStart: 1
+            importName: TektonCI
+            mountPoint: entity.page.ci/cards
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-quay
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
+- disabled: false
+  package: '@redhat/backstage-plugin-orchestrator-backend-dynamic@1.4.0'
+  pluginConfig:
+    orchestrator:
+      dataIndexService:
+        url: http://sonataflow-platform-data-index-service.sonataflow-infra
+- disabled: false
+  package: '@redhat/backstage-plugin-orchestrator@1.4.0'
+  pluginConfig:
+    dynamicPlugins:
+      frontend:
+        red-hat-developer-hub.backstage-plugin-orchestrator:
+          appIcons:
+          - importName: OrchestratorIcon
+            module: OrchestratorPlugin
+            name: orchestratorIcon
+          dynamicRoutes:
+          - importName: OrchestratorPage
+            menuItem:
+              icon: orchestratorIcon
+              text: Orchestrator
+            module: OrchestratorPlugin
+            path: /orchestrator
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-notifications
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-signals
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+- disabled: false
+  package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic

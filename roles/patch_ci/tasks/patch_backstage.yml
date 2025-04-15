@@ -56,6 +56,17 @@
     oc create configmap backstage-developer-hub-app-config --from-file=/tmp/app-config.yaml -n backstage
     oc label --overwrite configmap backstage-developer-hub-app-config rht-gitops.com/openshift-gitops=backstage -n backstage
 
+- name: create dynamic-plugins config file
+  template:
+    src: "templates/dynamic-plugins.yaml.j2"
+    dest: "/tmp/dynamic-plugins.yaml"
+
+- name: replace dynamic-plugins configmap
+  shell: |
+    oc delete configmap backstage-dynamic-plugins -n backstage
+    oc create configmap backstage-dynamic-plugins --from-file=/tmp/dynamic-plugins.yaml -n backstage
+    oc label --overwrite configmap backstage-dynamic-plugins rht-gitops.com/openshift-gitops=backstage -n backstage
+
 #- name: start backstage re-deployment
 #  shell: |
 #    oc delete pods --selector=app.kubernetes.io/name=developer-hub -n backstage
