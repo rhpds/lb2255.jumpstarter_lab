@@ -19,18 +19,14 @@ spec:
     managed: true
   - kind: clair
     managed: true
-    overrides:
-      volumeSize: 100Gi
   - kind: horizontalpodautoscaler
-    managed: false
+    managed: true
   - kind: mirror
     managed: false
   - kind: monitoring
     managed: false
   - kind: quay
     managed: true
-    overrides:
-      replicas: 10
   - kind: clairpostgres
     managed: true
   configBundleSecret: config-bundle
