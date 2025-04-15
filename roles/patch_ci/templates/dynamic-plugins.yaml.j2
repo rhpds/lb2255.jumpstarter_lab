@@ -58,29 +58,6 @@ plugins:
 - disabled: false
   package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
 - disabled: false
-  package: '@redhat/backstage-plugin-orchestrator-backend-dynamic@1.4.0'
-  pluginConfig:
-    orchestrator:
-      dataIndexService:
-        url: http://sonataflow-platform-data-index-service.sonataflow-infra
-- disabled: false
-  package: '@redhat/backstage-plugin-orchestrator@1.4.0'
-  pluginConfig:
-    dynamicPlugins:
-      frontend:
-        red-hat-developer-hub.backstage-plugin-orchestrator:
-          appIcons:
-          - importName: OrchestratorIcon
-            module: OrchestratorPlugin
-            name: orchestratorIcon
-          dynamicRoutes:
-          - importName: OrchestratorPage
-            menuItem:
-              icon: orchestratorIcon
-              text: Orchestrator
-            module: OrchestratorPlugin
-            path: /orchestrator
-- disabled: false
   package: ./dynamic-plugins/dist/backstage-plugin-notifications
 - disabled: false
   package: ./dynamic-plugins/dist/backstage-plugin-signals
