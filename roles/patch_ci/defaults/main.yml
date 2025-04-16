@@ -22,7 +22,7 @@ rhadp_namespace: rhadp
 
 # jumpstarter
 jumpstarter_helm_repo: quay.io/jumpstarter-dev/helm
-jumpstarter_helm_repo_version: "0.5.0-117-g1b98390"
+jumpstarter_helm_repo_version: "0.5.0-119-g2a430f1"
 
 # developer hub
 rhdh_title: "Red Hat Automotive Development Platform"

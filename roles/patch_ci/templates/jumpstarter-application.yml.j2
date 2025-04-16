@@ -19,6 +19,8 @@ spec:
         jumpstarter-controller:
           grpc:
             mode: "route"
+            endpoint: jumpstarter-grpc.jumpstarter-lab.svc.cluster.local:8082
+            routerEndpoint: jumpstarter-router-grpc.jumpstarter-lab.svc.cluster.local:8083
           config:
             authentication:
               jwt:
