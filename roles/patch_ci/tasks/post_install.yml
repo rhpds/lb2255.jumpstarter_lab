@@ -22,6 +22,34 @@
     oc patch tektonconfigs.operator.tekton.dev/config --type=merge \
       --patch='{"spec":{"pipeline":{"disable-affinity-assistant": false}}}'
 
+# https://access.redhat.com/solutions/7099814
+- name: patch odf csv
+  shell: |
+    oc -n openshift-storage patch csv cephcsi-operator.v4.17.0-rhodf \
+         --type=json \
+         -p='[
+         {
+             "op": "replace",
+             "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/resources/limits/memory",
+             "value": "256Mi"
+        },
+        {
+            "op": "replace",
+            "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/resources/requests/memory",
+            "value": "128Mi"
+        },
+        {
+            "op": "replace",
+            "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/1/resources/limits/memory",
+            "value": "256Mi"
+        },
+        {
+            "op": "replace",
+            "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/1/resources/requests/memory",
+            "value": "128Mi"
+        }
+    ]'
+
 - name: copy quay config to a know location
   copy:
     src:  quay.yaml
