@@ -188,4 +188,6 @@ spec:
                         guestport: 22
               EOF
 
-              jmp run --exporter-config qemu.yaml
+              while true; do
+                jmp run --exporter-config qemu.yaml
+              done
